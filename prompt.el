@@ -68,6 +68,7 @@ DEFAULT should be the default value to indicate in the prompt, or NIL for no def
 DEFAULT should be the default value to indicate in the prompt, or NIL for no default value."
   (prompt--make-prompt prompt prompt-default-prompt-suffixes default))
 
+;;;###autoload
 (defun prompt-completing-read-variable (prompt &optional predicate def)
   "Read the name of a variable in the minibuffer, with completion.
 See `completing-read' for the meaning of PROMPT, PREDICATE, and DEF."
