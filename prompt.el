@@ -20,7 +20,7 @@
 ;; Created: 2016-09-12
 ;; Version: 0.1.0
 ;; Keywords: input, minibuffer
-;; Package-Requires: ()
+;; Package-Requires: ((dash "2.13.0"))
 
 ;;; Commentary:
 
@@ -28,10 +28,28 @@
 
 ;;; Code:
 
+(require 'dash)
+
 (defgroup prompt nil
   "Text-input and read-completion utilities."
   :group 'minibuffer
   :prefix 'prompt-)
+
+(defun prompt--split (prompt suffixes)
+  "Split PROMPT into its main body and suffix in the form (BODY SUFFIX).
+SUFFIXES should be a list of possible suffixes."
+  (save-match-data
+    (let ((prompt-regex
+           (format "^\\(.+?\\)\\(%s\\|\\)\s*$"
+                   (apply 'concat (-interpose "\\|" (-map 'regexp-quote suffixes))))))
+      (string-match prompt-regex prompt)
+      (list (match-string 1 prompt) (match-string 2 prompt)))))
+
+(defun prompt--make-prompt (prompt suffixes default)
+  "Normalize PROMPT using SUFFIXES as the trailing suffixes.
+DEFAULT should be the default value to indicate in the prompt, or NIL for no default value."
+  (-let (((pbody psuffix) (prompt--split prompt suffixes)))
+    (format "%s%s%s" pbody (if default (format " (default %s)" default) "") psuffix)))
 
 (provide 'prompt)
 ;;; prompt.el ends here
