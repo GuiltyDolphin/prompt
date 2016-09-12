@@ -28,5 +28,10 @@
 
 ;;; Code:
 
+(defgroup prompt nil
+  "Text-input and read-completion utilities."
+  :group 'minibuffer
+  :prefix 'prompt-)
+
 (provide 'prompt)
 ;;; prompt.el ends here
