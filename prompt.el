@@ -49,7 +49,7 @@ SUFFIXES should be a list of possible suffixes."
   "Normalize PROMPT using SUFFIXES as the trailing suffixes.
 DEFAULT should be the default value to indicate in the prompt, or NIL for no default value."
   (-let (((pbody psuffix) (prompt--split prompt suffixes)))
-    (format "%s%s%s" pbody (if default (format " (default %s)" default) "") psuffix)))
+    (format "%s%s%s " pbody (if default (format " (default %s)" default) "") psuffix)))
 
 (provide 'prompt)
 ;;; prompt.el ends here
