@@ -1,4 +1,4 @@
-;;; prompt.el --- utilities for working with text prompts.
+;;; prompts.el --- utilities for working with text prompts.
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -15,8 +15,8 @@
 
 ;; Copyright (C) 2016 Ben Moon
 ;; Author: Ben Moon <guiltydolphin@gmail.com>
-;; URL: https://github.com/guiltydolphin/prompt
-;; Git-Repository: git://github.com/guiltydolphin/prompt.git
+;; URL: https://github.com/guiltydolphin/prompts.el
+;; Git-Repository: git://github.com/guiltydolphin/prompts.el.git
 ;; Created: 2016-09-12
 ;; Version: 0.1.0
 ;; Keywords: input, minibuffer
@@ -24,14 +24,14 @@
 
 ;;; Commentary:
 
-;; Prompt provides utilities for working with text prompts and read completion.
+;; Prompts provides utilities for working with text prompts and read completion.
 ;;
-;; For an example of prompt's enhanced completing-read,
-;; see `prompt-completing-read-variable', which supports reading any variable
+;; For an example of prompts' enhanced completing-read,
+;; see `prompts-completing-read-variable', which supports reading any variable
 ;; with a predicate, for example to prompt for a keymap with completion, you
 ;; could use:
 ;;
-;;    (prompt-completing-read-variable "Enter keymap: " 'keymapp)
+;;    (prompts-completing-read-variable "Enter keymap: " 'keymapp)
 
 ;;; Code:
 
@@ -40,14 +40,14 @@
 (defgroup prompt nil
   "Text-input and read-completion utilities."
   :group 'minibuffer
-  :prefix 'prompt-)
+  :prefix 'prompts-)
 
-(defcustom prompt-default-prompt-suffixes '(":" "?")
+(defcustom prompts-default-prompt-suffixes '(":" "?")
   "Default accepted prompt suffixes."
   :group 'prompt
   :type '(repeat string))
 
-(defun prompt--split (prompt suffixes)
+(defun prompts--split (prompt suffixes)
   "Split PROMPT into its main body and suffix in the form (BODY SUFFIX).
 SUFFIXES should be a list of possible suffixes."
   (save-match-data
@@ -57,19 +57,19 @@ SUFFIXES should be a list of possible suffixes."
       (string-match prompt-regex prompt)
       (list (match-string 1 prompt) (match-string 2 prompt)))))
 
-(defun prompt--make-prompt (prompt suffixes default)
+(defun prompts--make-prompt (prompt suffixes default)
   "Normalize PROMPT using SUFFIXES as the trailing suffixes.
 DEFAULT should be the default value to indicate in the prompt, or NIL for no default value."
-  (-let (((pbody psuffix) (prompt--split prompt suffixes)))
+  (-let (((pbody psuffix) (prompts--split prompt suffixes)))
     (format "%s%s%s " pbody (if default (format " (default %s)" default) "") psuffix)))
 
-(defun prompt--make-interactive-prompt (prompt default)
-  "Normalize PROMPT using `prompt-default-prompt-suffixes' as the suffixes.
+(defun prompts--make-interactive-prompt (prompt default)
+  "Normalize PROMPT using `prompts-default-prompt-suffixes' as the suffixes.
 DEFAULT should be the default value to indicate in the prompt, or NIL for no default value."
-  (prompt--make-prompt prompt prompt-default-prompt-suffixes default))
+  (prompts--make-prompt prompt prompts-default-prompt-suffixes default))
 
 ;;;###autoload
-(defun prompt-completing-read-variable (prompt &optional predicate def)
+(defun prompts-completing-read-variable (prompt &optional predicate def)
   "Read the name of a variable in the minibuffer, with completion.
 See `completing-read' for the meaning of PROMPT, PREDICATE, and DEF."
   (let ((v (or def (variable-at-point)))
@@ -82,10 +82,10 @@ See `completing-read' for the meaning of PROMPT, PREDICATE, and DEF."
         vars val)
     (mapatoms (lambda (atom) (when (funcall check atom) (push atom vars))))
     (setq val (completing-read
-               (prompt--make-interactive-prompt prompt (when (funcall check v) v))
+               (prompts--make-interactive-prompt prompt (when (funcall check v) v))
                vars check t nil nil
                (if (symbolp v) (symbol-name v))))
     (list (if (equal val "") v (intern val)))))
 
-(provide 'prompt)
-;;; prompt.el ends here
+(provide 'prompts)
+;;; prompts.el ends here

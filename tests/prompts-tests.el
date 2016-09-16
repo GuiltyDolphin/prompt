@@ -1,11 +1,11 @@
-;;; prompt-tests.el
+;;; prompts-tests.el
 ;;; Code:
 
 (require 'ert)
-(require 'prompt)
+(require 'prompts)
 
-(ert-deftest prompt-test-make-prompt ()
-  "Tests for `prompt--make-prompt'."
+(ert-deftest prompts-test-make-prompt ()
+  "Tests for `prompts--make-prompt'."
   (let ((cases '(("Name?" ("?") nil "Name? ")
                  ("Name?" ("?") "Jeff" "Name (default Jeff)? ")
                  ("Name:" ("?") "Jeff" "Name: (default Jeff) ")
@@ -15,7 +15,7 @@
                  ("Name:  " nil nil "Name: "))))
     (dolist (case cases)
       (-let (((prompt suffixes default expected) case))
-        (should (equal expected (prompt--make-prompt prompt suffixes default)))))))
+        (should (equal expected (prompts--make-prompt prompt suffixes default)))))))
 
-(provide 'prompt-tests)
-;;; prompt-tests.el ends here
+(provide 'prompts-tests)
+;;; prompts-tests.el ends here
